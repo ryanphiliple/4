@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public GameObject westExit;
     private float speed = 5.0f;
     private bool amMoving = false;
+    public bool fightWon = false;
 
     private void turnOffExits()
     {
@@ -86,11 +87,24 @@ public class PlayerController : MonoBehaviour
         {
             other.gameObject.SetActive(false);
 
+            if(MySingleton.thePlayer.getHP() < fightController.theMonster.getHP())
+            {
+                fightWon = true;
+                EditorSceneManager.LoadScene("Room1");
+                this.hero_hp_TMP.text = "added pellet";
+            }
+            else
+            {
+                print("you lost");
+                EditorSceneManager.LoadScene("Room1");
+            }
+
             Room theCurrentRoom = MySingleton.thePlayer.getCurrentRoom();
             if(MySingleton.isThisTheFirstTimeInTheFirstRoom)
             {
                 theCurrentRoom.removePellet(MySingleton.currentDirection);
                 MySingleton.isThisTheFirstTimeInTheFirstRoom = false;
+                
 
             }
             else
@@ -108,10 +122,7 @@ public class PlayerController : MonoBehaviour
             this.amMoving = false;
             MySingleton.currentDirection = "middle";
         }
-
-
-
-    }
+        
 
 
     // Update is called once per frame
